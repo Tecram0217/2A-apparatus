@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070603">
+  <title>CODE:2A — 消失装置</title>
+  <meta name="description" content="CODE:2A 消失装置から後日譚までを体験する独立版。">
+  <link rel="icon" type="image/png" href="assets/CODE2A.png.png">
+  <link rel="stylesheet" href="device.css">
+</head>
+<body>
+  <main class="device-screen open ready" id="device-screen" aria-labelledby="device-title">
+    <div class="device-shell" id="device-shell">
+      <header class="device-titlebar">
+        <span><b id="device-title">SPECTRA / DISAPPEARANCE DEVICE</b></span>
+        <span>VOID TRANSFER CONTROL</span>
+        <span class="device-window-controls" aria-hidden="true">● PWR　● TARGET　● BUS</span>
+      </header>
+
+      <section class="device-terminal" aria-label="消失装置コマンド端末">
+        <form class="device-command" id="device-form" novalidate>
+          <label for="device-target-name">消失する人物の名前を漢字で入力してください</label>
+          <div class="device-input-row">
+            <input id="device-target-name" name="device-target-name" type="text" maxlength="6" autocomplete="off" spellcheck="false" placeholder="名字または氏名" required>
+            <button class="device-activate" id="device-activate" type="submit">EXECUTE</button>
+          </div>
+          <p class="device-input-feedback" id="device-input-feedback" aria-live="polite"></p>
+        </form>
+        <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
+        <button class="device-continue" id="device-continue" type="button" disabled>CONTINUE TO REPORT　[ENTER]</button>
+      </section>
+
+      <footer class="device-statusbar">
+        <span>UNIT 19-2A　│　AUTHORIZED LOCAL SESSION</span>
+        <span>STATUS MONITOR　│　BUS 190V DC</span>
+      </footer>
+    </div>
+    <div class="device-transition-mask" aria-hidden="true"></div>
+  </main>
+
+  <section class="epilogue-screen" id="epilogue-screen" aria-labelledby="epilogue-heading" aria-hidden="true">
+    <div class="epilogue-top">CODE:2A / AFTER ACTION REPORT</div>
+    <div class="epilogue-dialogue" id="epilogue-dialogue">
+      <div class="epilogue-label"><span id="epilogue-heading">後日譚</span><span id="epilogue-counter">01 / 04</span></div>
+      <p class="epilogue-text" id="epilogue-text" aria-live="polite"></p>
+      <button class="epilogue-next" id="epilogue-next" type="button">次へ　›</button>
+    </div>
+    <div class="epilogue-result" id="epilogue-result">
+      <div>
+        <small id="epilogue-result-label">MISSION RECORD / CASE CLOSED</small>
+        <h1 class="epilogue-title" id="epilogue-title">CODE:2A <span class="ending-kind">クリア</span></h1>
+        <a class="epilogue-return" id="epilogue-return" href="ending1.html">後日譚を見る　→</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="device.js"></script>
+</body>
+</html>
