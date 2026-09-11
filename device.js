@@ -79,17 +79,39 @@ function appendTerminalLine(text, type = '') {
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
+async function typeTerminalLine(text, type = '') {
+  const line = document.createElement('p');
+  const textNode = document.createTextNode('');
+  const cursor = document.createElement('span');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  line.className = `terminal-line ${type}`.trim();
+  cursor.className = 'terminal-typing-cursor';
+  cursor.setAttribute('aria-hidden', 'true');
+  line.append(textNode, cursor);
+  terminalOutput.appendChild(line);
+
+  for (const character of Array.from(text)) {
+    textNode.data += character;
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    await new Promise(resolve => setTimeout(resolve, reducedMotion ? 0 : 52));
+  }
+
+  cursor.remove();
+  return line;
+}
+
 function waitForDeviceLine(milliseconds) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   return new Promise(resolve => setTimeout(resolve, reducedMotion ? Math.min(milliseconds, 90) : milliseconds));
 }
 
 async function runDeviceSequence() {
-  appendTerminalLine('消失装置、起動を確認。');
+  await typeTerminalLine('消失装置、起動を確認。');
   await waitForDeviceLine(900);
-  appendTerminalLine(`ターゲット「${selectedTargetName}」を認識シマシタ。`);
+  await typeTerminalLine(`ターゲット「${selectedTargetName}」を認識シマシタ。`);
   await waitForDeviceLine(1000);
-  appendTerminalLine('コレヨリ、消失に入リマス。', 'warning');
+  await typeTerminalLine('コレヨリ、消失に入リマス。', 'warning');
   await waitForDeviceLine(1200);
 
   for (const number of ['3', '2', '1']) {
@@ -103,9 +125,9 @@ async function runDeviceSequence() {
     await waitForDeviceLine(850);
   }
 
-  appendTerminalLine('・・・', 'count');
+  await typeTerminalLine('・・・', 'count');
   await waitForDeviceLine(1450);
-  appendTerminalLine('完了シマシタ。', 'success');
+  await typeTerminalLine('完了シマシタ。', 'success');
   deviceScreen.classList.add('complete');
   deviceRunning = false;
   deviceContinue.disabled = false;
@@ -221,7 +243,28 @@ document.addEventListener('keydown', event => {
   }
 });
 
+const deviceArrival = document.getElementById('device-arrival');
+let arrivalTimer;
+
+function revealDevice() {
+  clearTimeout(arrivalTimer);
+  deviceScreen.inert = true;
+  deviceArrival.classList.remove('opening');
+  deviceArrival.classList.add('covered');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  arrivalTimer = setTimeout(() => {
+    void deviceArrival.offsetWidth;
+    deviceArrival.classList.remove('covered');
+    deviceArrival.classList.add('opening');
+    arrivalTimer = setTimeout(() => {
+      deviceArrival.classList.remove('opening');
+      deviceScreen.inert = false;
+      if (!epilogueScreen.classList.contains('open')) deviceTargetInput.focus();
+    }, reduceMotion ? 40 : 940);
+  }, reduceMotion ? 24 : 128);
+}
+
 window.addEventListener('pageshow', () => {
   deviceTargetInput.value = '';
-  deviceTargetInput.focus();
+  revealDevice();
 });

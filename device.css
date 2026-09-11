@@ -40,6 +40,7 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:1px solid var
 
 .terminal-output { position:relative; min-height:0; padding:clamp(24px,4vw,52px); overflow-y:auto; scrollbar-color:#72521f #090703; }
 .terminal-line { margin:0 0 5px; color:#d9a546; text-shadow:0 0 5px rgba(236,163,43,.23); font-size:clamp(10px,1vw,13px); line-height:1.45; white-space:pre-wrap; }
+.terminal-typing-cursor { display:inline-block; width:.48em; height:.48em; margin-left:.14em; background:currentColor; box-shadow:0 0 8px currentColor; vertical-align:-.08em; animation:terminalTypingCursor .82s steps(1,end) infinite; }
 .terminal-line.warning { color:#ef6c45; text-shadow:0 0 7px rgba(237,70,38,.25); }
 .terminal-line.success { color:#c8d36b; }
 .device-screen.running .device-command,.device-screen.complete .device-command { display:none; }
@@ -97,4 +98,22 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline:1px solid var
 
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+/* Arrival: continue the ending page's black and red diagonal wipe. */
+.device-arrival { position:fixed; z-index:300; inset:0; overflow:hidden; visibility:hidden; pointer-events:none; }
+.device-arrival.covered,.device-arrival.opening { visibility:visible; pointer-events:auto; }
+.device-arrival-slab,.device-arrival-stripe { position:absolute; top:-12%; bottom:-12%; left:-12%; width:124%; }
+.device-arrival-slab { background:#090a09; transform:translateX(116%) skewX(-7deg); }
+.device-arrival.covered { background:#090a09; }
+.device-arrival.covered .device-arrival-slab { transform:translateX(0) skewX(-7deg); }
+.device-arrival-stripe { left:-24%; width:22%; background:#8f1f1f; transform:translateX(-70%) skewX(-7deg); }
+.device-arrival.opening .device-arrival-slab { animation:deviceArrivalOpen .86s cubic-bezier(.77,0,.18,1) both; }
+.device-arrival.opening .device-arrival-stripe { animation:deviceArrivalStripe .88s cubic-bezier(.77,0,.18,1) both; }
+@keyframes deviceArrivalOpen { from { transform:translateX(0) skewX(-7deg); } to { transform:translateX(116%) skewX(-7deg); } }
+@keyframes deviceArrivalStripe { from { transform:translateX(-70%) skewX(-7deg); } to { transform:translateX(630%) skewX(-7deg); } }
+@keyframes terminalTypingCursor { 0%,48% { opacity:1; } 49%,100% { opacity:0; } }
+@media (prefers-reduced-motion:reduce) {
+  .device-arrival.opening .device-arrival-slab,.device-arrival.opening .device-arrival-stripe { animation-duration:.01ms; }
+  .terminal-typing-cursor { animation:none; opacity:1; }
 }
