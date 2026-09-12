@@ -202,8 +202,10 @@ function startEpilogue(skipDialogue = false) {
   epilogueScreen.setAttribute('aria-hidden', 'false');
 
   if (skipDialogue) {
-    // 急いでいる人向け：結末だけ表示して終了。FILE画面へのリンクは出さない。
-    epilogueReturn.hidden = true;
+    // 急いでいる人向け：結末だけ表示し、消失装置へ戻れるようにする。
+    epilogueReturn.hidden = false;
+    epilogueReturn.href = 'index.html';
+    epilogueReturn.textContent = '消失装置に戻る　→';
     epilogueActive = false;
     epilogueDialogue.classList.add('hidden');
     epilogueResult.classList.add('visible');
