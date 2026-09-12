@@ -5,6 +5,7 @@ const deviceActivate = document.getElementById('device-activate');
 const deviceTargetInput = document.getElementById('device-target-name');
 const deviceInputFeedback = document.getElementById('device-input-feedback');
 const deviceContinue = document.getElementById('device-continue');
+const deviceContinueQuick = document.getElementById('device-continue-quick');
 const terminalOutput = document.getElementById('terminal-output');
 const epilogueScreen = document.getElementById('epilogue-screen');
 const epilogueDialogue = document.getElementById('epilogue-dialogue');
@@ -131,6 +132,7 @@ async function runDeviceSequence() {
   deviceScreen.classList.add('complete');
   deviceRunning = false;
   deviceContinue.disabled = false;
+  deviceContinueQuick.disabled = false;
   setTimeout(() => deviceContinue.focus(), 500);
 }
 
@@ -180,7 +182,7 @@ function renderEpilogueLine() {
   );
 }
 
-function startEpilogue() {
+function startEpilogue(skipDialogue = false) {
   const isTrue = selectedTargetKey === 'chinen';
   const isUncertain = selectedTargetKey === 'kanzaki';
   const kind = isTrue ? 'true' : isUncertain ? 'uncertain' : 'bad';
@@ -189,9 +191,6 @@ function startEpilogue() {
 
   epilogueLines = epilogues[kind];
   epilogueIndex = 0;
-  epilogueActive = true;
-  epilogueDialogue.classList.remove('hidden');
-  epilogueResult.classList.remove('visible');
   epilogueTitle.replaceChildren('CODE:2A ');
   const endingKind = document.createElement('span');
   endingKind.className = 'ending-kind';
@@ -199,12 +198,25 @@ function startEpilogue() {
   epilogueTitle.appendChild(endingKind);
   epilogueTitle.className = `epilogue-title ${kind}`;
   epilogueResultLabel.textContent = label;
-  epilogueReturn.href = endingFileByTarget[selectedTargetKey];
-  epilogueReturn.textContent = '後日譚を見る　→';
-  renderEpilogueLine();
   epilogueScreen.classList.add('open');
   epilogueScreen.setAttribute('aria-hidden', 'false');
-  setTimeout(() => epilogueNext.focus(), 750);
+
+  if (skipDialogue) {
+    // 急いでいる人向け：結末だけ表示して終了。FILE画面へのリンクは出さない。
+    epilogueReturn.hidden = true;
+    epilogueActive = false;
+    epilogueDialogue.classList.add('hidden');
+    epilogueResult.classList.add('visible');
+  } else {
+    epilogueReturn.hidden = false;
+    epilogueReturn.href = endingFileByTarget[selectedTargetKey];
+    epilogueReturn.textContent = '後日譚を見る　→';
+    epilogueActive = true;
+    epilogueDialogue.classList.remove('hidden');
+    epilogueResult.classList.remove('visible');
+    renderEpilogueLine();
+    setTimeout(() => epilogueNext.focus(), 750);
+  }
 }
 
 function advanceEpilogue() {
@@ -224,8 +236,17 @@ function advanceEpilogue() {
 deviceContinue.addEventListener('click', () => {
   if (!deviceScreen.classList.contains('complete') || deviceScreen.classList.contains('leaving')) return;
   deviceContinue.disabled = true;
+  deviceContinueQuick.disabled = true;
   deviceScreen.classList.add('leaving');
-  setTimeout(startEpilogue, 650);
+  setTimeout(() => startEpilogue(false), 650);
+});
+
+deviceContinueQuick.addEventListener('click', () => {
+  if (!deviceScreen.classList.contains('complete') || deviceScreen.classList.contains('leaving')) return;
+  deviceContinue.disabled = true;
+  deviceContinueQuick.disabled = true;
+  deviceScreen.classList.add('leaving');
+  setTimeout(() => startEpilogue(true), 650);
 });
 
 epilogueNext.addEventListener('click', advanceEpilogue);

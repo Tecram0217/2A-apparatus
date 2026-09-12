@@ -33,7 +33,10 @@
           <p class="device-input-feedback" id="device-input-feedback" aria-live="polite"></p>
         </form>
         <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
-        <button class="device-continue" id="device-continue" type="button" disabled>つづき</button>
+        <div class="device-continue-group" id="device-continue-group">
+          <button class="device-continue" id="device-continue" type="button" disabled>つづきを読む　›</button>
+          <button class="device-continue quick" id="device-continue-quick" type="button" disabled>結末だけ見る　›</button>
+        </div>
       </section>
 
       <footer class="device-statusbar">
@@ -43,11 +46,11 @@
     </div>
     <div class="device-transition-mask" aria-hidden="true"></div>
   </main>
+    
 
   <section class="epilogue-screen" id="epilogue-screen" aria-labelledby="epilogue-heading" aria-hidden="true">
-    <div class="epilogue-top">CODE:2A / AFTER ACTION REPORT</div>
     <div class="epilogue-dialogue" id="epilogue-dialogue">
-      <div class="epilogue-label"><span id="epilogue-heading">後日譚</span><span id="epilogue-counter">01 / 04</span></div>
+      <div class="epilogue-label"><span id="epilogue-heading">つづき</span><span id="epilogue-counter">01 / 04</span></div>
       <p class="epilogue-text" id="epilogue-text" aria-live="polite"></p>
       <button class="epilogue-next" id="epilogue-next" type="button">次へ　›</button>
     </div>
@@ -55,7 +58,7 @@
       <div>
         <small id="epilogue-result-label">MISSION RECORD / CASE CLOSED</small>
         <h1 class="epilogue-title" id="epilogue-title">CODE:2A <span class="ending-kind">クリア</span></h1>
-        <a class="epilogue-return" id="epilogue-return" href="ending1.html">後日譚を見る　→</a>
+        <a class="epilogue-return" id="epilogue-return" href="ending1.html">つづき　→</a>
       </div>
     </div>
   </section>
